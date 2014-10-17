@@ -5,7 +5,7 @@ import org.lwjgl.opengl.GL11;
 public class Graphics {
 
     public void setColor(Color color) {
-        GL11.glColor3f(color.getDecimalRed(), color.getDecimalGreen(), color.getDecimalBlue());
+        GL11.glColor3f(color.getRed(), color.getGreen(), color.getBlue());
     }
 
     public void fillRectangle(int x, int y, int width, int height) {
@@ -31,7 +31,7 @@ public class Graphics {
         drawLine(x, y + height, x, y);
     }
     
-    public void drawImage(Image image) {
-        image.draw();
+    public void drawImage(Image image, int x, int y) {
+        image.draw(x, y);
     }
 }

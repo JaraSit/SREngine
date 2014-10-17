@@ -12,6 +12,7 @@ public class World01 extends BaseState {
     Image image;
 //    Serialiser s = new Serialiser("../pack.dat");
     Entity sprite;
+    Entity sprite2;
 //    Entity sprite2 = new Entity(100, 200, "../Graphics/people/Sit_01.png");
 //    Entity entity;
 //    Entity brick11 = new Entity(200, 200,
@@ -73,7 +74,9 @@ public class World01 extends BaseState {
 //        image = new Image("Graphics/people/Rain_01.png");
 //        super.init();
         sprite = new Entity(100, 100, "Graphics/people/Rain_01.png");
+        sprite2 = new Entity(200, 200, "Graphics/people/Rain_01.png");
         add(9, sprite);
+        add(9, sprite2);
 //        // sprite.invertOverY(true);
 ////		sprite.setCentered(true);
 //        add(5, sprite2);
@@ -107,6 +110,8 @@ public class World01 extends BaseState {
     @Override
     protected void update(GameCore gc, int delta) {
         super.update(gc, delta);
+        
+        sprite.setX(sprite.getX()+0.02f*delta);
 //        gc.enterState(2);
 //        super.update(input, gc);
 //        angle += 0.05;
@@ -160,6 +165,8 @@ public class World01 extends BaseState {
     protected void draw(GameCore gc, Graphics g) {
         super.draw(gc, g);
 
+        g.setColor(Color.WHITE);
+        g.drawLine(200, 200, 400, 400);
 //        g.setColor(Color.RED);
 //        g.drawRectangle(100, 100, 200, 200);
         

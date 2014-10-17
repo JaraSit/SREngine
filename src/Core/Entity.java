@@ -14,7 +14,7 @@ public class Entity extends SREObject{
 
     @Override
     public void draw(GameCore gc, Graphics g) {
-        image.draw();
+        image.draw((int)x, (int)y);
     }
 
     @Override
