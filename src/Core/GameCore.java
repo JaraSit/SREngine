@@ -24,6 +24,7 @@ public class GameCore {
 
     private ArrayList<BaseState> states = new ArrayList<>();
     private Graphics graphics = new Graphics();
+    private InputManager input = new InputManager();
 
     public void start() {
 
@@ -67,16 +68,13 @@ public class GameCore {
 //        GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
         states.get(0).enter();
         while (!Display.isCloseRequested()) {
-            GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
-
-            GL11.glMatrixMode(GL11.GL_MODELVIEW);
-
-            GL11.glLoadIdentity();
 
             delta = (int) (System.currentTimeMillis() - previousTime);
             previousTime = System.currentTimeMillis();
 
-            states.get(actualState).update(this, delta);
+            input.update();
+            
+            states.get(actualState).update(this, input, delta);
 //            GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
             states.get(actualState).draw(this, graphics);
             Display.update();

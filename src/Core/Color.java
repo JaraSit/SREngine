@@ -10,6 +10,7 @@ public class Color {
     public final static Color YELLOW = new Color(255, 255, 0, 255);
     public final static Color BLUE = new Color(0, 0, 255, 255);
     public final static Color GREEN = new Color(0, 255, 0, 255);
+    public final static Color GRAY = new Color(125, 125, 125, 255);
 
     float r;
     float g;
@@ -17,9 +18,9 @@ public class Color {
     float a = 255;
 
     public Color(int r, int g, int b, int a) {
-        this.r = r/255f;
-        this.g = g/255f;
-        this.b = b/255f;
+        this.r = r / 255f;
+        this.g = g / 255f;
+        this.b = b / 255f;
     }
 
     public float getRed() {
@@ -33,7 +34,7 @@ public class Color {
     public float getBlue() {
         return b;
     }
-    
+
     public void bind() {
         GL11.glColor4f(r, g, b, a);
     }

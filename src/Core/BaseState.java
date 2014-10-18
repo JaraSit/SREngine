@@ -20,7 +20,7 @@ public class BaseState {
 
     }
 
-    protected void update(GameCore gc, int delta) {
+    protected void update(GameCore gc, InputManager input, int delta) {
         for (int i = 0; i < objects.size(); i++) {
             objects.get(i).update(gc, delta);
         }
