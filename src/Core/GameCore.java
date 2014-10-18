@@ -42,6 +42,7 @@ public class GameCore {
 
         //init OpenGl
         initOpenGL();
+        initStates();
 
         //game loop
         previousTime = System.currentTimeMillis();
@@ -159,6 +160,9 @@ public class GameCore {
 //        GL11.glColor3f(0.5f, 0.5f, 1.0f);
         GL11.glOrtho(0, Display.getWidth(), Display.getHeight(), 0, -1, 1);
         GL11.glMatrixMode(GL11.GL_MODELVIEW);
+    }
+    
+    public void initStates() {
     }
 
 }

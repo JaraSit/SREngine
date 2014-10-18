@@ -19,8 +19,8 @@ public class World01 extends BaseState {
     Entity brick11;
     Entity brick12;
     Entity brick13;
-//    Entity brick21 = new Entity(200, 232,
-//            "../Graphics/blocks/floor_metal_01.png");
+    Entity brick21 = new Entity(200, 232,
+            "../Graphics/blocks/floor_metal_01.png");
 //    Entity brick22 = new Entity(232, 232,
 //            "../Graphics/blocks/floor_metal_01.png");
 //    Rectangle rect = new Rectangle(32, 32);
@@ -39,10 +39,11 @@ public class World01 extends BaseState {
     int upd2 = 0;
     double angle = 0;
 //   
+
     public World01(int id) {
         super(id);
         setBackground(Color.GRAY);
-        
+
 //        ArrayList<String> l = new ArrayList<>();
 //        l.add("../Graphics/people/Sit_01_a.png");
 //        l.add("../Graphics/people/Sit_01_b.png");
@@ -50,7 +51,6 @@ public class World01 extends BaseState {
 //        entity.run(300);
 //"Graphics/people/Rain_01_b.png"
 //        try {
-            
 //            ser = new Entity(400, 300, s.getData("female_01.png"));
 //        } catch (IOException e) {
 //            // TODO Auto-generated catch block
@@ -66,23 +66,26 @@ public class World01 extends BaseState {
     @Override
     protected void enter() {
         super.enter();
-        
-        sprite = new Entity(100, 100, "Graphics/people/Rain_01.png");
+
+        image = Image.load("../Graphics/people/r2d2_01_a.png");
+
+        sprite = new Entity(100, 100, "../Graphics/people/Rain_01.png");
         sprite2 = new Entity(100, 200, "../Graphics/people/Sit_01.png");
         brick11 = new Entity(200, 200, "../Graphics/blocks/floor_metal_01.png");
         brick12 = new Entity(232, 200, "../Graphics/blocks/floor_metal_01.png");
         brick13 = new Entity(264, 200, "../Graphics/blocks/floor_metal_01.png");
         animSer = new Entity(10, 300, new String[]{"../Graphics/people/Rain_01_a.png", "../Graphics/people/Rain_01_b.png"});
         expl1 = new Entity(200, 232, new String[]{"../Graphics/fx/expl_01_a.png",
-        "../Graphics/fx/expl_01_b.png", "../Graphics/fx/expl_01_c.png", "../Graphics/fx/expl_01_d.png", "../Graphics/fx/expl_01_e.png",
-        "../Graphics/fx/expl_01_f.png", "../Graphics/fx/expl_01_g.png", "../Graphics/fx/expl_01_h.png"});
-        
+            "../Graphics/fx/expl_01_b.png", "../Graphics/fx/expl_01_c.png", "../Graphics/fx/expl_01_d.png", "../Graphics/fx/expl_01_e.png",
+            "../Graphics/fx/expl_01_f.png", "../Graphics/fx/expl_01_g.png", "../Graphics/fx/expl_01_h.png"});
+
         animSer.startAnimate(350);
-                
+
         add(9, sprite);
 //        // sprite.invertOverY(true);
-////		sprite.setCentered(true);
+        sprite.setCentered(true);
         add(5, sprite2);
+        sprite2.setCentered(true);
 //        sprite2.setHitboxValign(IHitBox.VALIGN_BOTTOM);
 //        sprite2.setHitboxAlign(IHitBox.ALIGN_RIGHT);
 //        sprite2.setAngle(180);
@@ -92,7 +95,7 @@ public class World01 extends BaseState {
         add(-1, brick11);
         add(-1, brick12);
         add(-1, brick13);
-//        add(-1, brick21);
+        add(-1, brick21);
 //        add(-1, brick22);
 //        add(6, ser);
         add(9, animSer);
@@ -100,6 +103,7 @@ public class World01 extends BaseState {
 //        sprite2.setHitBox(rect2);
 //        add(5, new TestObject());
         add(10, expl1);
+        expl1.hide();
 //        add(9, r2d2);
     }
 //
@@ -109,15 +113,13 @@ public class World01 extends BaseState {
 //
 //    }
 //
-
     @Override
     protected void update(GameCore gc, InputManager input, int delta) {
         super.update(gc, input, delta);
-        
+
 //        sprite.setX(sprite.getX()+0.02f*delta);
 //        gc.enterState(2);
-//        super.update(input, gc);
-        angle += 0.005*delta;
+        angle += 0.005 * delta;
 //        upd++;
         upd2++;
 ////		sprite.setAngle(sprite.getAngle() + 0.01f);
@@ -125,29 +127,31 @@ public class World01 extends BaseState {
 //        
 //
         if (input.isKeyPressed(Keyboard.KEY_LEFT)) {
-            sprite.setX(sprite.getX() - 0.05f*delta);
+            sprite.setX(sprite.getX() - 0.05f * delta);
             // gc.enterState(2);
 
         }
 
         if (input.isKeyPressed(Keyboard.KEY_RIGHT)) {
-            sprite.setX(sprite.getX() + 0.05f*delta);
+            sprite.setX(sprite.getX() + 0.05f * delta);
         }
 
         if (input.isKeyPressed(Keyboard.KEY_UP)) {
-            sprite.setY(sprite.getY() - 0.05f*delta);
+            sprite.setY(sprite.getY() - 0.05f * delta);
         }
 
         if (input.isKeyPressed(Keyboard.KEY_DOWN)) {
-            sprite.setY(sprite.getY() + 0.05f*delta);
+            sprite.setY(sprite.getY() + 0.05f * delta);
         }
 //
         if (input.isKeyTyped(Keyboard.KEY_Q)) {
             expl1.singleShot(70);
 //            sprite2.setAngle(sprite2.getAngle() - 0.1f);
         }
-//        sprite2.setX(input.getPosX());
-//        sprite2.setY(input.getPosY());
+
+        sprite2.setAngle(sprite2.getAngle() - 0.001f * delta);
+        sprite2.setX(input.getMouseX());
+        sprite2.setY(input.getMouseY());
 //        entity.setX(upd2 / 4);
         animSer.setX(upd2 / 20);
 //        r2d2.setX((float) (upd2 / 4.5));
@@ -157,11 +161,16 @@ public class World01 extends BaseState {
 //        } else {
 //            System.out.println("neni kolize");
 //        }
+
 //        
         if (input.isKeyTyped(Keyboard.KEY_K)) {
-            System.out.println("release");
             remove(brick13);
         }
+        
+        if(input.isLMBClicked()) System.out.println("LMB");
+        if(input.isRMBClicked()) System.out.println("RMB");
+        if(input.isMMBClicked()) System.out.println("MMB");
+
 //
     }
 
@@ -173,9 +182,10 @@ public class World01 extends BaseState {
         g.drawLine(200, 200, 400, 400);
 //        g.setColor(Color.RED);
 //        g.drawRectangle(100, 100, 200, 200);
-        
-//        g.drawImage(image);
-        
+
+        g.drawImage(image, 200, 100);
+        image.testDraw(300, 100);
+
         //        super.draw(g, gc);
 //
 //        g.setColor(Color.black);
@@ -183,7 +193,8 @@ public class World01 extends BaseState {
                 (int) Math.round(Math.cos(angle) * 50 + 200));
 //        g.drawLine(0, 0, gc.getWindow().getWidth(), gc.getWindow().getHeight());
 //        g.drawLine(0, 0, 600, 600);
-//        g.drawChars("It's race!".toCharArray(), 0, 10, 10, 290);
+//        g.drawString("It's race!", 10, 10);
+
 //        rect3.draw(g, gc);
     }
 }

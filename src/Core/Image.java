@@ -20,6 +20,9 @@ public class Image {
     private int height;
     private float textureWidth;
     private float textureHeight;
+    private float angle = 0f;
+    private float centerX;
+    private float centerY;
 
     public Image() {
 
@@ -33,6 +36,8 @@ public class Image {
             height = texture.getImageHeight();
             textureWidth = texture.getWidth();
             textureHeight = texture.getHeight();
+            centerX = width / 2;
+            centerY = height / 2;
         } catch (IOException ex) {
             System.out.println("nenalezen soubor");
         }
@@ -56,33 +61,36 @@ public class Image {
         this.height = tex.getImageHeight();
         this.textureWidth = tex.getWidth();
         this.textureHeight = tex.getHeight();
+        centerX = width / 2;
+        centerY = height / 2;
     }
 
     public void draw(int x, int y) {
-        
+        draw(x, y, false);
+    }
+
+    public void draw(int x, int y, boolean centered) {
         GL11.glEnable(GL11.GL_BLEND);
         GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
         GL11.glEnable(GL11.GL_TEXTURE_2D);
         GL11.glPushMatrix();
 
         GL11.glTranslatef(x, y, 0);
+        if(centered) {
+            GL11.glTranslatef(-centerX, -centerY, 0f);
+        }
+
+        if (angle != 0) {
+            GL11.glTranslatef(centerX, centerY, 0f);
+            GL11.glRotatef(angle, 0.0f, 0.0f, 1.0f);
+            GL11.glTranslatef(-centerX, -centerY, 0f);
+        }
 
         Color.WHITE.bind();
         texture.bind();
 
         GL11.glBegin(GL11.GL_QUADS);
         {
-//            GL11.glTexCoord2f(0, 0);
-//            GL11.glVertex2f(0, 0);
-//
-//            GL11.glTexCoord2f(0, texture.getHeight());
-//            GL11.glVertex2f(0, height);
-//
-//            GL11.glTexCoord2f(texture.getWidth(), texture.getHeight());
-//            GL11.glVertex2f(width, height);
-//
-//            GL11.glTexCoord2f(texture.getWidth(), 0);
-//            GL11.glVertex2f(width, 0);
             GL11.glTexCoord2f(0, 0);
             GL11.glVertex2f(0, 0);
 
@@ -99,8 +107,40 @@ public class Image {
 
         GL11.glPopMatrix();
         GL11.glDisable(GL11.GL_TEXTURE_2D);
+    }
 
-//                GL11.glColor4f(1f, 1f, 1f, 1f);
-//                Color.WHITE.bind();
+    public void testDraw(int x, int y) {
+        GL11.glEnable(GL11.GL_BLEND);
+        GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+        GL11.glEnable(GL11.GL_TEXTURE_2D);
+        GL11.glPushMatrix();
+
+        GL11.glTranslatef(x, y, 0);
+
+        Color.WHITE.bind();
+        texture.bind();
+
+        GL11.glBegin(GL11.GL_QUADS);
+        {
+            GL11.glTexCoord2f(textureWidth, 0);
+            GL11.glVertex2f(0, 0);
+
+            GL11.glTexCoord2f(textureWidth, textureHeight);
+            GL11.glVertex2f(0, height);
+
+            GL11.glTexCoord2f(0, textureHeight);
+            GL11.glVertex2f(width, height);
+
+            GL11.glTexCoord2f(0, 0);
+            GL11.glVertex2f(width, 0);
+        }
+        GL11.glEnd();
+
+        GL11.glPopMatrix();
+        GL11.glDisable(GL11.GL_TEXTURE_2D);
+    }
+
+    public void setAngleDeg(float angle) {
+        this.angle = angle;
     }
 }

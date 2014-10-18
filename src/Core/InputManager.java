@@ -1,23 +1,14 @@
 package Core;
 
-import java.awt.Component;
-import java.awt.Point;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
-import java.awt.event.MouseWheelEvent;
-import java.awt.event.MouseWheelListener;
-
-import javax.swing.JFrame;
 import org.lwjgl.input.Keyboard;
+import org.lwjgl.input.Mouse;
+import org.lwjgl.opengl.Display;
 
 public class InputManager {
 
-	private boolean keys[] = new boolean[256];
-//	private int posX, posY;
-//	public boolean LMB, RMB, MMB;
+    private boolean keys[] = new boolean[256];
+    private int posX, posY;
+    public boolean mouseButtons[] = new boolean[3];
 //	private int rotation;
 //	private int clicks;
 //	private Component c;
@@ -26,7 +17,7 @@ public class InputManager {
 //	public boolean listenKeys = false;
 //	public String typed = "";
 //
-        
+
 //	public InputManager(Component c) {
 //		c.addKeyListener(this);
 //		c.addMouseListener(this);
@@ -39,16 +30,20 @@ public class InputManager {
 //		rotation = 0;
 //		clicks = 0;
 //	}
-        
-        public void update() {
-            while(Keyboard.next()) {
-                if(Keyboard.getEventKeyState()) {
-                    keys[Keyboard.getEventKey()] = true;
-                } else {
-                    keys[Keyboard.getEventKey()] = false;
-                }
-            }
+    public void update() {
+        while (Keyboard.next()) {
+            keys[Keyboard.getEventKey()] = Keyboard.getEventKeyState();
         }
+        while (Mouse.next()) {
+            if (Mouse.getEventButton() > -1) {
+                mouseButtons[Mouse.getEventButton()] = Mouse.getEventButtonState();
+            }
+
+        }
+
+        posX = Mouse.getX();
+        posY = Mouse.getY();
+    }
 //	
 //	public int getRotDirection(){
 //		int rot = rotationDirection;
@@ -60,39 +55,55 @@ public class InputManager {
 //		return clicks;
 //	}
 //
-//	public int getPosX() {
-//		return posX;
-//	}
+
+    public int getMouseX() {
+        return posX;
+    }
 //	
 //	public Point getPos(){
 //		return new Point(posX, posY);
 //	}
 //
-//	public int getPosY() {
-//		return posY;
-//	}
+
+    public int getMouseY() {
+        return Display.getHeight() - posY;
+    }
 //
 //	public int getRotation() {
 //		return rotation;
 //	}
 //
-//	public boolean isLMB() {
-//		boolean ret = LMB;
-//		LMB = false;
-//		return ret;
-//	}
-//
-//	public boolean isMMB() {
-//		boolean ret = MMB;
-//		MMB = false;
-//		return ret;
-//	}
-//
-//	public boolean isRMB() {
-//		boolean ret = RMB;
-//		RMB = false;
-//		return ret;
-//	}
+
+    public boolean isLMBClicked() {
+        boolean lmb = mouseButtons[0];
+        mouseButtons[0] = false;
+        return lmb;
+    }
+
+    public boolean isLMBDown() {
+        return mouseButtons[0];
+    }
+
+    public boolean isRMBClicked() {
+        boolean lmb = mouseButtons[1];
+        mouseButtons[1] = false;
+        return lmb;
+    }
+
+    public boolean isRMBDown() {
+        return mouseButtons[1];
+    }
+
+    public boolean isMMBClicked() {
+        boolean lmb = mouseButtons[2];
+        mouseButtons[2] = false;
+        return lmb;
+    }
+
+    public boolean isMMBDown() {
+        return mouseButtons[2];
+    }
+
 //
 //	public int MBPressed(){
 //		if(isLMB())
@@ -109,69 +120,21 @@ public class InputManager {
 //		typed = "";
 //		return buf;
 //	}
+    public boolean isKeyPressed(int key) {
+        if (key > 0 && key < 256) {
+            return keys[key];
+        }
 
-        
-	public boolean isKeyPressed(int key) {
-		if (key > 0 && key < 256) {
-			return keys[key];
-		}
-		
-		return false;
-	}
-//
-//	@Override
-//	public void mouseClicked(MouseEvent e) {
-//		mouseDragged(e);
-//		
-//	}
-//
-//	@Override
-//	public void mousePressed(MouseEvent e) {
-//	}
-//
-//	@Override
-//	public void mouseReleased(MouseEvent e) {
-//	}
-//
-//	@Override
-//	public void mouseEntered(MouseEvent e) {
-//		
-//	}
-//
-//	@Override
-//	public void mouseExited(MouseEvent e) {
-//
-//	}
-//
-//	@Override
-//	public void mouseWheelMoved(MouseWheelEvent e) {
-//		rotation += e.getWheelRotation();
-//		rotationDirection = e.getWheelRotation();
-//		event = true;
-//	}
-//
-//	@Override
-//	public void mouseDragged(MouseEvent e) {
-//		clicks = e.getClickCount();
-//		LMB = e.getButton() == MouseEvent.BUTTON1;
-//		MMB = e.getButton() == MouseEvent.BUTTON2;
-//		RMB = e.getButton() == MouseEvent.BUTTON3;
-//		event = true;
-//	}
-//
-//	@Override
-//	public void mouseMoved(MouseEvent e) {
-//		posX = e.getPoint().x - ((JFrame) c).getInsets().left;
-//		posY = e.getPoint().y - ((JFrame) c).getInsets().top;
-//	}
-//
-	public boolean isKeyTyped(int key) {
-		if (key > 0 && key < 256 && keys[key]) {
-			keys[key] = false;
-			return true;
-		}
-		return false;
-	}
+        return false;
+    }
+
+    public boolean isKeyTyped(int key) {
+        if (key > 0 && key < 256 && keys[key]) {
+            keys[key] = false;
+            return true;
+        }
+        return false;
+    }
 //	
 //	public void resetEvent(){
 //		event = false;

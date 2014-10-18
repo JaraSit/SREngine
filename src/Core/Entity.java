@@ -1,11 +1,11 @@
 package Core;
 
-import org.newdawn.slick.opengl.Texture;
-
 public class Entity extends SREObject {
 
-    Image image;
-    Animation anim;
+    private Image image;
+    private Animation anim;
+    private boolean centered = false;
+    private boolean hiden = false;
 
     public Entity(float x, float y, String path) {
         setX(x);
@@ -21,10 +21,10 @@ public class Entity extends SREObject {
 
     @Override
     public void draw(GameCore gc, Graphics g) {
-        if (image != null) {
-            image.draw((int) x, (int) y);
-        } else if (anim != null) {
-            anim.draw((int)x, (int)y);
+        if (image != null && !hiden) {
+            image.draw((int) x, (int) y, centered);
+        } else if (anim != null && !hiden) {
+            anim.draw((int)x, (int)y, centered);
         }
     }
 
@@ -32,6 +32,11 @@ public class Entity extends SREObject {
     public void update(GameCore gc, int delta) {
         if(anim != null) {
             anim.update(delta);
+            if(anim.isAfterSingleShot()) hide();
+            anim.getCurrentFrame().setAngleDeg(this.getAngleDeg());
+        } else if(image != null){
+            this.image.setAngleDeg(this.getAngleDeg());
+            
         }
     }
     
@@ -47,8 +52,21 @@ public class Entity extends SREObject {
     
     public void singleShot(int period) {
         if(anim != null) {
+            show();
             anim.singleShot(period);
         }
+    }
+    
+    public void setCentered(boolean centered) {
+        this.centered = centered;
+    }
+    
+    public void hide() {
+        this.hiden = true;
+    }
+    
+    public void show() {
+        this.hiden = false;
     }
 
 }

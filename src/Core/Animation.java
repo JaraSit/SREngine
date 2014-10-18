@@ -8,7 +8,7 @@ public class Animation {
     private int actualFrame = 0;
     private int period = 100;
     private int time = 0;
-     boolean isAnimate = false;
+    private boolean isAnimate = false;
     private boolean singleShot = false;
 
     public Animation(Image[] frms) {
@@ -23,8 +23,8 @@ public class Animation {
         }
     }
 
-    public void draw(int x, int y) {
-        frames.get(actualFrame).draw(x, y);
+    public void draw(int x, int y, boolean centered) {
+        frames.get(actualFrame).draw(x, y, centered);
     }
 
     public void update(int delta) {
@@ -52,6 +52,14 @@ public class Animation {
     public void singleShot(int period) {
         this.singleShot = true;
         this.startAnimate(period);
+    }
+    
+    public boolean isAfterSingleShot() {
+        return !singleShot;
+    }
+    
+    public Image getCurrentFrame() {
+        return this.frames.get(actualFrame);
     }
 
 }
