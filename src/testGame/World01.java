@@ -70,6 +70,7 @@ public class World01 extends BaseState {
         image = Image.load("../Graphics/people/r2d2_01_a.png");
 
         sprite = new Entity(100, 100, "../Graphics/people/Rain_01.png");
+        cameraOn(sprite, 1000, 1000);
         sprite2 = new Entity(100, 200, "../Graphics/people/Sit_01.png");
         brick11 = new Entity(200, 200, "../Graphics/blocks/floor_metal_01.png");
         brick12 = new Entity(232, 200, "../Graphics/blocks/floor_metal_01.png");
@@ -127,21 +128,21 @@ public class World01 extends BaseState {
 //        
 //
         if (input.isKeyPressed(Keyboard.KEY_LEFT)) {
-            sprite.setX(sprite.getX() - 0.05f * delta);
+            sprite.setX(sprite.getX() - 0.1f * delta);
             // gc.enterState(2);
 
         }
 
         if (input.isKeyPressed(Keyboard.KEY_RIGHT)) {
-            sprite.setX(sprite.getX() + 0.05f * delta);
+            sprite.setX(sprite.getX() + 0.1f * delta);
         }
 
         if (input.isKeyPressed(Keyboard.KEY_UP)) {
-            sprite.setY(sprite.getY() - 0.05f * delta);
+            sprite.setY(sprite.getY() - 0.1f * delta);
         }
 
         if (input.isKeyPressed(Keyboard.KEY_DOWN)) {
-            sprite.setY(sprite.getY() + 0.05f * delta);
+            sprite.setY(sprite.getY() + 0.1f * delta);
         }
 //
         if (input.isKeyTyped(Keyboard.KEY_Q)) {
@@ -170,8 +171,8 @@ public class World01 extends BaseState {
         if(input.isLMBClicked()) System.out.println("LMB");
         if(input.isRMBClicked()) System.out.println("RMB");
         if(input.isMMBClicked()) System.out.println("MMB");
-
-//
+        
+//        gc.enterState(2);
     }
 
     @Override
@@ -191,8 +192,14 @@ public class World01 extends BaseState {
 //        g.setColor(Color.black);
         g.drawLine(500, 200, (int) Math.round(Math.sin(angle) * 50 + 500),
                 (int) Math.round(Math.cos(angle) * 50 + 200));
+        
+        g.drawCircle(100, 100, 49);
+        g.drawOval(300, 300, 300, 30);
+        g.drawCircle(200, 200, 30);
 //        g.drawLine(0, 0, gc.getWindow().getWidth(), gc.getWindow().getHeight());
 //        g.drawLine(0, 0, 600, 600);
+        
+        //TODO slow!! :/
 //        g.drawString("It's race!", 10, 10);
 
 //        rect3.draw(g, gc);

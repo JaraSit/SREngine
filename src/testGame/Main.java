@@ -10,14 +10,15 @@ public class Main extends GameCore {
 
         main.setDisplayMode(800, 600, false, true);
         main.setTitle("Test_of_SREngine_v_2_0");
-        main.setFPS(35);
+        main.setFPS(30);
+        main.displayFPS();
 
         main.start();
 
     }
 
     @Override
-    public void initStates() {
+    protected void initStates() {
         addState(new World01(1));
         addState(new World02(2));
     }

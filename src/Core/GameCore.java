@@ -6,9 +6,16 @@ import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
 import org.lwjgl.opengl.GL11;
 
-public class GameCore {
+/**
+ * The main class of engine. The class stored states and switches between them.
+ * Class call main update and draw method.
+ *
+ * @author Vojtech 'Rain' Vladyka, Jaroslav 'Sit' Schmidt
+ */
+public abstract class GameCore {
 
     //info about project
+    private static final String NAME = "SREngine";
     private static final String VERSION = "2.0";
     private static final String SIT = "Jaroslav 'Sit' Schmidt";
     private static final String RAIN = "Vojtech 'Rain' Vladyka";
@@ -17,73 +24,84 @@ public class GameCore {
     //timing
     private long previousTime;
     private int delta;
+    private int FPS;
+    private int realFPS = 0;
+    private long fpsTime;
+    private boolean displayFPS = false;
 
     //states managing
     private int actualState = 0;
-    private boolean inState = true;
-
     private ArrayList<BaseState> states = new ArrayList<>();
-    private Graphics graphics = new Graphics();
-    private InputManager input = new InputManager();
 
+    //Graphics and input classes
+    private final Graphics graphics = new Graphics();
+    private final InputManager input = new InputManager();
+
+    /**
+     * Start method. This start whole mechanism
+     */
     public void start() {
 
         //print info
-        System.out.println("SREngine v" + VERSION + " created by " + SIT
+        System.out.println(NAME + " v" + VERSION + " created by " + SIT
                 + " & " + RAIN + " at " + YEAR);
 
         //create window
         try {
             Display.create();
         } catch (LWJGLException e) {
-            System.out.println("Error during creating display mode");
+            System.out.println("Error during creating window");
             System.exit(0);
         }
 
         //init OpenGl
         initOpenGL();
+        //load states
         initStates();
+        
+        //init every state
+        for (int i = 0; i < states.size(); i++) {
+            states.get(i).init();
+        }
+
+        //initialize time variables
+        previousTime = System.currentTimeMillis();
+        fpsTime = System.currentTimeMillis();
+
+        //call of first enter method
+        states.get(0).enter();
 
         //game loop
-        previousTime = System.currentTimeMillis();
-//        while (true) {
-//            inState = true;
-//            states.get(0).enter();
-//            while (inState) {
-//                delta = (int) (System.currentTimeMillis() - previousTime);
-//                previousTime = System.currentTimeMillis();
-//
-//                states.get(actualState).update(this, delta);
-//                GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
-//                states.get(actualState).draw(this, graphics);
-//                Display.update();
-//
-//                //TODO!!!!
-//                if (Display.isCloseRequested()) {
-//                    Display.destroy();
-//                    break;
-//                }
-//            }
-//        }
-
-//        GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
-        states.get(0).enter();
         while (!Display.isCloseRequested()) {
 
+            //calculate delta
             delta = (int) (System.currentTimeMillis() - previousTime);
             previousTime = System.currentTimeMillis();
 
+            //update inputManager and calculating of FPS
             input.update();
-            
-            states.get(actualState).update(this, input, delta);
-//            GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
-            states.get(actualState).draw(this, graphics);
-            Display.update();
-        }
-        Display.destroy();
+            updateFPS();
 
+            //call update and draw method od actual State
+            states.get(actualState).update(this, input, delta);
+            states.get(actualState).draw(this, graphics);
+
+            //Redraw the window
+            Display.update();
+            Display.sync(FPS);
+        }
+
+        Display.destroy();
     }
 
+    /**
+     * Display mode setter
+     *
+     * @param width Width of window
+     * @param height Heigh of window
+     * @param fullscreen
+     * @param Vsync
+     */
     public void setDisplayMode(int width, int height, boolean fullScreen, boolean VSync) {
         try {
             DisplayMode displayMode = null;
@@ -118,51 +136,104 @@ public class GameCore {
         }
     }
 
+    /**
+     * Title setter
+     *
+     * @param title Title of window
+     */
     public void setTitle(String title) {
         Display.setTitle(title);
     }
 
+    /**
+     * FPS setter
+     *
+     * @param FPS Required FPS value
+     */
     public void setFPS(int FPS) {
-        Display.sync(FPS);
+        this.FPS = FPS;
     }
 
+    /**
+     * Add state to game
+     *
+     * @param state New state
+     */
     public void addState(BaseState state) {
         this.states.add(state);
     }
 
+    /**
+     * Enter to state with this id
+     *
+     * @param id Id of state
+     */
     public void enterState(int id) {
         for (int i = 0; i < states.size(); i++) {
             if (states.get(i).getId() == id) {
+                states.get(i).enter();
                 actualState = i;
-                inState = false;
             }
         }
     }
 
+    /**
+     * Window width getter
+     *
+     * @return width of window
+     */
     public int getWidth() {
         return Display.getWidth();
     }
 
+    /**
+     * Window height getter
+     *
+     * @return height of window
+     */
     public int getHeight() {
         return Display.getHeight();
     }
 
-    //PRIVATE FUNCTIONS
-    private void initOpenGL() {
-//        GL11.glEnable(GL11.GL_TEXTURE_2D);
-        GL11.glDisable(GL11.GL_DEPTH_TEST);
-//        GL11.glClearColor(0, 0, 0, 0);
-//        GL11.glEnable(GL11.GL_BLEND);
-//        GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+    /**
+     * Init every state, must be inherit
+     */
+    protected abstract void initStates();
 
+    /**
+     * Display FPS value to title
+     */
+    public void displayFPS() {
+        this.displayFPS = true;
+    }
+
+    //PRIVATE FUNCTIONS
+    
+    /**
+     * 
+     */
+    private void initOpenGL() {
+
+        GL11.glDisable(GL11.GL_DEPTH_TEST);
+        GL11.glDisable(GL11.GL_LIGHTING);
         GL11.glMatrixMode(GL11.GL_PROJECTION);
         GL11.glLoadIdentity();
-//        GL11.glColor3f(0.5f, 0.5f, 1.0f);
         GL11.glOrtho(0, Display.getWidth(), Display.getHeight(), 0, -1, 1);
         GL11.glMatrixMode(GL11.GL_MODELVIEW);
     }
-    
-    public void initStates() {
+
+    /**
+     * 
+     */
+    private void updateFPS() {
+        if (System.currentTimeMillis() - fpsTime > 1000) {
+            if (displayFPS) {
+                Display.setTitle("FPS: " + realFPS);
+            }
+            realFPS = 0;
+            fpsTime += 1000;
+        }
+        realFPS++;
     }
 
 }
