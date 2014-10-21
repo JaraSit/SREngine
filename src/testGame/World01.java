@@ -8,11 +8,12 @@ import Core.Graphics;
 import Core.Image;
 import Core.InputManager;
 import org.lwjgl.input.Keyboard;
+import srengine.utils.Serialiser;
 
 public class World01 extends BaseState {
 
     Image image;
-//    Serialiser s = new Serialiser("../pack.dat");
+    Serialiser s = new Serialiser("../pack.dat");
     Entity sprite;
     Entity sprite2;
     Entity entity;
@@ -69,7 +70,7 @@ public class World01 extends BaseState {
 
         image = Image.load("../Graphics/people/r2d2_01_a.png");
 
-        sprite = new Entity(100, 100, "../Graphics/people/Rain_01.png");
+        sprite = new Entity(100, 100, "Rain_01.png", s);
         cameraOn(sprite, 1000, 1000);
         sprite2 = new Entity(100, 200, "../Graphics/people/Sit_01.png");
         brick11 = new Entity(200, 200, "../Graphics/blocks/floor_metal_01.png");
@@ -104,7 +105,7 @@ public class World01 extends BaseState {
 //        sprite2.setHitBox(rect2);
 //        add(5, new TestObject());
         add(10, expl1);
-        expl1.hide();
+//        expl1.hide();
 //        add(9, r2d2);
     }
 //
@@ -122,7 +123,7 @@ public class World01 extends BaseState {
 //        gc.enterState(2);
         angle += 0.005 * delta;
 //        upd++;
-        upd2++;
+        upd2 += delta;
 ////		sprite.setAngle(sprite.getAngle() + 0.01f);
 //        sprite.setAngle(1);
 //        
@@ -154,7 +155,7 @@ public class World01 extends BaseState {
         sprite2.setX(input.getMouseX());
         sprite2.setY(input.getMouseY());
 //        entity.setX(upd2 / 4);
-        animSer.setX(upd2 / 20);
+        animSer.setX(upd2 / 40);
 //        r2d2.setX((float) (upd2 / 4.5));
 //
 //        if (sprite.collisionWith(sprite2)) {

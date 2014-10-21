@@ -3,6 +3,7 @@ package Core;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.lwjgl.opengl.GL11;
@@ -50,7 +51,18 @@ public class Image {
             System.out.println(path);
             i.setTexture(TextureLoader.getTexture("PNG", new FileInputStream(new File(path))));
         } catch (IOException ex) {
-            System.out.println("nenalezen soubor");
+            System.out.println("load texture exception");
+        }
+        return i;
+    }
+    
+    static public Image read(InputStream stream) {
+        Image i = null;
+        try {
+            i = new Image();
+            i.setTexture(TextureLoader.getTexture("PNG", stream));
+        } catch (IOException ex) {
+            System.out.println("load texture exception");
         }
         return i;
     }
