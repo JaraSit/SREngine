@@ -3,41 +3,43 @@ package Core;
 import java.io.IOException;
 import srengine.utils.Serialiser;
 
-public class Entity extends SREObject {
+public class TestEntity extends PhysicalSREObject {
 
-//    private Image image;
+    private Image image;
     private Animation anim;
     private boolean centered = false;
     private boolean hiden = false;
     private IHitBox hitBox;
 
-    public Entity(float x, float y, String path) {
+    public TestEntity(float x, float y, String path) {
         super(x, y);
-//        image = Image.load(path);
-        this.anim = new Animation(new String[]{path});
+        image = Image.load(path);
     }
 
-    public Entity(float x, float y, String image, Serialiser s) {
+    public TestEntity(float x, float y, String image, Serialiser s) {
         super(x, y);
-//            this.image = Image.read(s.getData(image));
-        this.anim = new Animation(new String[]{image}, s);
+        try {
+            this.image = Image.read(s.getData(image));
+        } catch (IOException ex) {
+        }
+
     }
 
-    public Entity(float x, float y, String[] paths) {
+    public TestEntity(float x, float y, String[] paths) {
         super(x, y);
         anim = new Animation(paths);
     }
 
-    public Entity(float x, float y, String[] paths, Serialiser s) {
+    public TestEntity(float x, float y, String[] paths, Serialiser s) {
         super(x, y);
         anim = new Animation(paths, s);
     }
 
     @Override
     public void draw(GameCore gc, Graphics g) {
-//        if (image != null && !hiden) {
-//            image.draw((int) x, (int) y, centered);
-        if (anim != null && !hiden) {
+        if (image != null && !hiden) {
+            image.draw((int) x, (int) y, centered);
+        } else if (anim != null && !hiden) {
             anim.draw((int) x, (int) y, centered);
         }
         if (hitBox != null) {
@@ -48,23 +50,23 @@ public class Entity extends SREObject {
 
     @Override
     public void update(GameCore gc, int delta) {
+        super.update(gc, delta);
         if (anim != null) {
             anim.update(delta);
             anim.getCurrentFrame().setAngleDeg(this.getAngleDeg());
+
+        } else if (image != null) {
+            this.image.setAngleDeg(this.getAngleDeg());
         }
-//        } else if (image != null) {
-//            this.image.setAngleDeg(this.getAngleDeg());
-//        }
 
         if (hitBox != null) {
             if (centered) {
-                hitBox.setX(x - anim.getCurrentFrame().getWidth() / 2);
-                hitBox.setY(y - anim.getCurrentFrame().getHeight() / 2);
+                hitBox.setX(x - anim.getCurrentFrame().getWidth()/2);
+                hitBox.setY(y - anim.getCurrentFrame().getHeight()/2);
             } else {
                 hitBox.setX(x);
                 hitBox.setY(y);
             }
-            hitBox.setRotate(this.getAngleDeg());
         }
     }
 

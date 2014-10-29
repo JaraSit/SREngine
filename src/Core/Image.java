@@ -31,7 +31,6 @@ public class Image {
 
     public Image(String path) {
         try {
-//            texture = TextureLoader.getTexture("PNG", ResourceLoader.getResourceAsStream(path));
             texture = TextureLoader.getTexture("PNG", new FileInputStream(new File(path)));
             width = texture.getImageWidth();
             height = texture.getImageHeight();
@@ -48,19 +47,20 @@ public class Image {
         Image i = null;
         try {
             i = new Image();
-            System.out.println(path);
             i.setTexture(TextureLoader.getTexture("PNG", new FileInputStream(new File(path))));
+            System.out.println("Load: " + path);
         } catch (IOException ex) {
             System.out.println("load texture exception");
         }
         return i;
     }
-    
+
     static public Image read(InputStream stream) {
         Image i = null;
         try {
             i = new Image();
             i.setTexture(TextureLoader.getTexture("PNG", stream));
+            System.out.println("Load: " + stream);
         } catch (IOException ex) {
             System.out.println("load texture exception");
         }
@@ -76,27 +76,44 @@ public class Image {
         centerX = width / 2;
         centerY = height / 2;
     }
+    
+    public Texture getTexture() {
+        return this.texture;
+    }
+
+    public int getWidth() {
+        return width;
+    }
+
+    public int getHeight() {
+        return height;
+    }
 
     public void draw(int x, int y) {
         draw(x, y, false);
     }
 
-    public void draw(int x, int y, boolean centered) {
+    public void draw(float x, float y, boolean centered) {
+        if (centered) {
+            draw(x, y, centerX, centerY);
+        } else {
+            draw(x, y, 0, 0);
+        }
+    }
+
+    public void draw(float x, float y, float leftPad, float topPad) {
         GL11.glEnable(GL11.GL_BLEND);
         GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
         GL11.glEnable(GL11.GL_TEXTURE_2D);
         GL11.glPushMatrix();
 
         GL11.glTranslatef(x, y, 0);
-        if(centered) {
-            GL11.glTranslatef(-centerX, -centerY, 0f);
-        }
 
         if (angle != 0) {
-            GL11.glTranslatef(centerX, centerY, 0f);
             GL11.glRotatef(angle, 0.0f, 0.0f, 1.0f);
-            GL11.glTranslatef(-centerX, -centerY, 0f);
         }
+
+        GL11.glTranslatef(-leftPad, -topPad, 0f);
 
         Color.WHITE.bind();
         texture.bind();

@@ -1,6 +1,10 @@
 package Core;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import srengine.utils.Serialiser;
 
 public class Animation {
 
@@ -10,6 +14,7 @@ public class Animation {
     private int time = 0;
     private boolean isAnimate = false;
     private boolean singleShot = false;
+    private boolean afterSingleShot = false;
 
     public Animation(Image[] frms) {
         for (int i = 0; i < frms.length; i++) {
@@ -20,6 +25,15 @@ public class Animation {
     public Animation(String[] paths) {
         for (int i = 0; i < paths.length; i++) {
             frames.add(Image.load(paths[i]));
+        }
+    }
+
+    public Animation(String[] paths, Serialiser s) {
+        for (int i = 0; i < paths.length; i++) {
+            try {
+                frames.add(Image.read(s.getData(paths[i])));
+            } catch (IOException ex) {
+            }
         }
     }
 
@@ -38,6 +52,7 @@ public class Animation {
                     if (singleShot) {
                         isAnimate = false;
                         singleShot = false;
+                        afterSingleShot = true;
                     }
                 }
             }
@@ -53,11 +68,15 @@ public class Animation {
         this.singleShot = true;
         this.startAnimate(period);
     }
-    
+
     public boolean isAfterSingleShot() {
-        return !singleShot;
+        if(afterSingleShot) {
+            afterSingleShot = false;
+            return true;
+        }
+        return false;
     }
-    
+
     public Image getCurrentFrame() {
         return this.frames.get(actualFrame);
     }

@@ -9,13 +9,21 @@ public class Graphics {
     public void setColor(Color color) {
         GL11.glColor3f(color.getRed(), color.getGreen(), color.getBlue());
     }
-    
+
     public void translate(float x, float y) {
         GL11.glTranslatef(x, y, 0f);
     }
-    
+
+    public void rotate(float angle) {
+        GL11.glRotatef(angle, 0f, 0f, 1f);
+    }
+
     public void resetTransform() {
         GL11.glPopMatrix();
+    }
+
+    public void saveTransform() {
+        GL11.glPushMatrix();
     }
 
     public void fillRectangle(int x, int y, int width, int height) {
@@ -41,6 +49,14 @@ public class Graphics {
         drawLine(x, y + height, x, y);
     }
 
+    public void drawRectangle(int x, int y, int width, int height, float angle) {
+        saveTransform();
+        translate(x, y);
+        rotate(angle);
+        drawRectangle(0, 0, width, height);
+        resetTransform();
+    }
+
     public void drawImage(Image image, int x, int y) {
         image.draw(x, y);
     }
@@ -63,13 +79,13 @@ public class Graphics {
 
     public void drawOval(int x, int y, int radius1, int radius2) {
         float fi = 0;
-        
+
         int steps = (radius1 + radius2) / 4;
         float delta = (float) ((Math.PI / 2) / steps);
 
         GL11.glBegin(GL11.GL_LINE_STRIP);
         GL11.glVertex2f(x + radius1, y + 0f);
-        
+
         while (fi < Math.PI * 2) {
             fi += delta;
             GL11.glVertex2d(x + Math.cos(fi) * radius1, y + Math.sin(fi) * radius2);
