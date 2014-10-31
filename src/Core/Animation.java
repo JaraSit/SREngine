@@ -64,13 +64,17 @@ public class Animation {
         this.isAnimate = true;
     }
 
+    public void startAnimate() {
+        this.isAnimate = true;
+    }
+
     public void singleShot(int period) {
         this.singleShot = true;
         this.startAnimate(period);
     }
 
     public boolean isAfterSingleShot() {
-        if(afterSingleShot) {
+        if (afterSingleShot) {
             afterSingleShot = false;
             return true;
         }
@@ -81,4 +85,23 @@ public class Animation {
         return this.frames.get(actualFrame);
     }
 
+    public void setPeriod(int period) {
+        this.period = period;
+    }
+
+    public void setFrame(int frame) {
+        if (frame < frames.size()) {
+            this.actualFrame = frame;
+        } else {
+            frame = 0;
+        }
+    }
+
+    public void nextFrame() {
+        if (actualFrame + 1 < frames.size()) {
+            actualFrame++;
+        } else {
+            actualFrame = 0;
+        }
+    }
 }

@@ -151,5 +151,5 @@ public abstract class SREObject {
     /**
      * Abstract method update
      */
-    public abstract void update(GameCore gc, int delta);
+    public abstract void update(GameCore gc, InputManager input, int delta);
 }

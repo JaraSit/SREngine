@@ -8,8 +8,11 @@ public class Entity extends SREObject {
 //    private Image image;
     private Animation anim;
     private boolean centered = false;
-    private boolean hiden = false;
+    private boolean hidden = false;
     private IHitBox hitBox;
+    private IHitBox clickBox;
+    private boolean isDestroyed = false;
+    private boolean hitBoxIsVisible = true;
 
     public Entity(float x, float y, String path) {
         super(x, y);
@@ -37,7 +40,7 @@ public class Entity extends SREObject {
     public void draw(GameCore gc, Graphics g) {
 //        if (image != null && !hiden) {
 //            image.draw((int) x, (int) y, centered);
-        if (anim != null && !hiden) {
+        if (anim != null && !hidden) {
             anim.draw((int) x, (int) y, centered);
         }
         if (hitBox != null) {
@@ -47,7 +50,7 @@ public class Entity extends SREObject {
     }
 
     @Override
-    public void update(GameCore gc, int delta) {
+    public void update(GameCore gc, InputManager input, int delta) {
         if (anim != null) {
             anim.update(delta);
             anim.getCurrentFrame().setAngleDeg(this.getAngleDeg());
@@ -64,13 +67,29 @@ public class Entity extends SREObject {
                 hitBox.setX(x);
                 hitBox.setY(y);
             }
-            hitBox.setRotate(this.getAngleDeg());
+            hitBox.setRotate(this.getAngle());
+        }
+        if (clickBox != null) {
+            if (centered) {
+                clickBox.setX(x - anim.getCurrentFrame().getWidth() / 2);
+                clickBox.setY(y - anim.getCurrentFrame().getHeight() / 2);
+            } else {
+                clickBox.setX(x);
+                clickBox.setY(y);
+            }
+            clickBox.setRotate(this.getAngle());
         }
     }
 
     public void startAnimate(int period) {
         if (anim != null) {
             this.anim.startAnimate(period);
+        }
+    }
+
+    public void startAnimate() {
+        if (anim != null) {
+            this.anim.startAnimate();
         }
     }
 
@@ -89,19 +108,72 @@ public class Entity extends SREObject {
     }
 
     public void hide() {
-        this.hiden = true;
+        this.hidden = true;
     }
 
     public void show() {
-        this.hiden = false;
+        this.hidden = false;
     }
 
     public void setHitBox(IHitBox hitBox) {
         this.hitBox = hitBox;
     }
 
+    public void setClickBox(IHitBox clickBox) {
+        this.clickBox = clickBox;
+    }
+
     public IHitBox getHitBox() {
         return this.hitBox;
     }
 
+    public void setPeriod(int period) {
+        if (anim != null) {
+            this.anim.setPeriod(period);
+        }
+    }
+
+    public void hideShow() {
+        this.hidden = !hidden;
+    }
+
+    public void setFrame(int frame) {
+        this.anim.setFrame(frame);
+    }
+
+    public void destroy() {
+        this.isDestroyed = true;
+    }
+
+    public void redraw() {
+        this.anim.nextFrame();
+    }
+
+    public boolean hidden() {
+        return this.hidden;
+    }
+
+    public Image getImage() {
+        return this.anim.getCurrentFrame();
+    }
+
+    public boolean collisionWith(Entity entity) {
+        if (this.hitBox == null || entity.getHitBox() == null) {
+            return false;
+        }
+
+        return (this.hitBox.intersects(entity.getHitBox()) || entity.getHitBox().intersects(this.hitBox));
+    }
+
+    public boolean isPointInside(int x, int y) {
+        if (this.clickBox == null) {
+            return false;
+        }
+
+        return (((Rectangle) this.clickBox).intersects(x, y));
+    }
+
+    public void setHitBoxVisible(boolean visible) {
+        this.hitBoxIsVisible = visible;
+    }
 }

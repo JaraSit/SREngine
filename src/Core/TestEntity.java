@@ -49,8 +49,8 @@ public class TestEntity extends PhysicalSREObject {
     }
 
     @Override
-    public void update(GameCore gc, int delta) {
-        super.update(gc, delta);
+    public void update(GameCore gc, InputManager input, int delta) {
+        super.update(gc, input, delta);
         if (anim != null) {
             anim.update(delta);
             anim.getCurrentFrame().setAngleDeg(this.getAngleDeg());

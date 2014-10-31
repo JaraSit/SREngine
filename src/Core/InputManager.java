@@ -1,5 +1,7 @@
 package Core;
 
+import java.awt.Point;
+import java.awt.event.MouseWheelEvent;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
@@ -22,7 +24,7 @@ public class InputManager {
     public static final int KEY_0 = 11;
     public static final int KEY_MINUS = 12;
     public static final int KEY_EQUALS = 13;
-    public static final int KEY_BACK = 14;
+    public static final int KEY_BACKSPACE = 14;
     public static final int KEY_TAB = 15;
     public static final int KEY_Q = 16;
     public static final int KEY_W = 17;
@@ -36,8 +38,8 @@ public class InputManager {
     public static final int KEY_P = 25;
     public static final int KEY_LBRACKET = 26;
     public static final int KEY_RBRACKET = 27;
-    public static final int KEY_RETURN = 28;
-    public static final int KEY_LCONTROL = 29;
+    public static final int KEY_ENTER = 28;
+    public static final int KEY_CTRL = 29;
     public static final int KEY_A = 30;
     public static final int KEY_S = 31;
     public static final int KEY_D = 32;
@@ -142,18 +144,25 @@ public class InputManager {
     public static final int KEY_POWER = 222;
     public static final int KEY_SLEEP = 223;
 
+    public static final int MOUSE_BUTTON1 = 1;
+    public static final int MOUSE_BUTTON2 = 2;
+    public static final int MOUSE_BUTTON3 = 3;
+
     private boolean keys[] = new boolean[256];
     private int posX, posY;
-    public boolean mouseButtons[] = new boolean[3];
+    private boolean mouseButtons[] = new boolean[3];
+    private int wheel = 0;
+    private int rotation = 0;
+    private boolean listenKeys = false;
+    private String typed = "";
+
 //	private int rotation;
 //	private int clicks;
 //	private Component c;
 //	private int rotationDirection;
-//	public boolean event = false;
 //	public boolean listenKeys = false;
 //	public String typed = "";
 //
-
 //	public InputManager(Component c) {
 //		c.addKeyListener(this);
 //		c.addMouseListener(this);
@@ -169,10 +178,15 @@ public class InputManager {
     public void update() {
         while (Keyboard.next()) {
             keys[Keyboard.getEventKey()] = Keyboard.getEventKeyState();
+            typed += Keyboard.getEventCharacter();
         }
         while (Mouse.next()) {
             if (Mouse.getEventButton() > -1) {
                 mouseButtons[Mouse.getEventButton()] = Mouse.getEventButtonState();
+            }
+
+            if (Mouse.hasWheel()) {
+                rotation += Mouse.getDWheel() / 120;
             }
 
         }
@@ -180,26 +194,24 @@ public class InputManager {
         posX = Mouse.getX();
         posY = Mouse.getY();
     }
-//	
-//	public int getRotDirection(){
-//		int rot = rotationDirection;
-//		rotationDirection = 0;
-//		return rot;
-//	}
-//
+
+    public int getRotDirection() {
+        int rot = rotation;
+        rotation = 0;
+        return rot;
+    }
+
 //	public int getClicks() {
 //		return clicks;
 //	}
 //
-
     public int getMouseX() {
         return posX;
     }
-//	
-//	public Point getPos(){
-//		return new Point(posX, posY);
-//	}
-//
+
+    public Point getMousePos() {
+        return new Point(posX, posY);
+    }
 
     public int getMouseY() {
         return Display.getHeight() - posY;
@@ -211,9 +223,10 @@ public class InputManager {
 //
 
     public boolean isLMBClicked() {
-        boolean lmb = mouseButtons[0];
-        mouseButtons[0] = false;
-        return lmb;
+//        boolean lmb = mouseButtons[0];
+//        mouseButtons[0] = false;
+//        return lmb;
+        return isMouseClicked(0);
     }
 
     public boolean isLMBDown() {
@@ -221,9 +234,10 @@ public class InputManager {
     }
 
     public boolean isRMBClicked() {
-        boolean lmb = mouseButtons[1];
-        mouseButtons[1] = false;
-        return lmb;
+//        boolean lmb = mouseButtons[1];
+//        mouseButtons[1] = false;
+//        return lmb;
+        return isMouseClicked(1);
     }
 
     public boolean isRMBDown() {
@@ -231,31 +245,40 @@ public class InputManager {
     }
 
     public boolean isMMBClicked() {
-        boolean lmb = mouseButtons[2];
-        mouseButtons[2] = false;
-        return lmb;
+//        boolean lmb = mouseButtons[2];
+//        mouseButtons[2] = false;
+//        return lmb;
+        return isMouseClicked(2);
     }
 
     public boolean isMMBDown() {
         return mouseButtons[2];
     }
+    
+    public boolean isMouseClicked(int i) {
+        if(i > -1 && i < 3) {
+            boolean temp = mouseButtons[i];
+            mouseButtons[i] = false;
+            return temp;
+        }
+        return false;
+    }
 
-//
-//	public int MBPressed(){
-//		if(isLMB())
-//			return MouseEvent.BUTTON1;
-//		if(isMMB())
-//			return MouseEvent.BUTTON3;
-//		if(isRMB())
-//			return MouseEvent.BUTTON2;
-//		return 0;
-//	}
+    public int MBPressed() {
+        for (int i = 0; i < mouseButtons.length; i++) {
+            if (isMouseClicked(i)) {
+                return (i + 1);
+            }
+        }
+        return 0;
+    }
 //	
 //	public String flush(){
 //		String buf = typed;
 //		typed = "";
 //		return buf;
 //	}
+
     public boolean isKeyPressed(int key) {
         if (key > 0 && key < 256) {
             return keys[key];
@@ -271,9 +294,23 @@ public class InputManager {
         }
         return false;
     }
-//	
-//	public void resetEvent(){
-//		event = false;
-//	}
-//
+
+    public void setListenKeys(boolean listen) {
+        this.listenKeys = listen;
+    }
+
+    public String getTyped() {
+        return this.typed;
+    }
+
+    public void setTyped(String typed) {
+        this.typed = typed;
+    }
+
+    public String flush() {
+        String buf = typed;
+        typed = "";
+        return buf;
+    }
+
 }

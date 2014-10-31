@@ -1,13 +1,25 @@
 package Core;
 
 import java.awt.Font;
+import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.lwjgl.opengl.GL11;
 import org.newdawn.slick.TrueTypeFont;
+import org.newdawn.slick.opengl.Texture;
+import org.newdawn.slick.util.BufferedImageUtil;
 
 public class Graphics {
 
+    public Graphics() {
+
+    }
+
     public void setColor(Color color) {
-        GL11.glColor3f(color.getRed(), color.getGreen(), color.getBlue());
+//        GL11.glColor3f(color.getRed(), color.getGreen(), color.getBlue());
+        GL11.glColor4f(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
     }
 
     public void translate(float x, float y) {
@@ -15,7 +27,7 @@ public class Graphics {
     }
 
     public void rotate(float angle) {
-        GL11.glRotatef(angle, 0f, 0f, 1f);
+        GL11.glRotatef((float) Math.toDegrees(angle), 0f, 0f, 1f);
     }
 
     public void resetTransform() {
@@ -63,12 +75,49 @@ public class Graphics {
 
     //????????????????????
     public void drawString(String text, int x, int y) {
+        Texture t = null;
+        try {
+            //        GL11.glEnable(GL11.GL_TEXTURE_2D);
+//        GL11.glPushMatrix();
+//        GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
+
+//        font.drawString(x, y, text);
+//        GL11.glPopMatrix();
+//        GL11.glDisable(GL11.GL_TEXTURE_2D);
+            GL11.glEnable(GL11.GL_TEXTURE_2D);
+            BufferedImage b = new BufferedImage(300, 100, BufferedImage.TYPE_INT_ARGB);
+            Graphics2D g = b.createGraphics();
+            g.drawString(text, 10, 10);
+            t = BufferedImageUtil.getTexture("aa", b);
+        } catch (IOException ex) {
+            Logger.getLogger(Graphics.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        GL11.glDisable(GL11.GL_TEXTURE_2D);
+//        GL11.glEnable(GL11.GL_BLEND);
+//        GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
         GL11.glEnable(GL11.GL_TEXTURE_2D);
         GL11.glPushMatrix();
-//        GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
-        Font awtFont = new Font("Times New Roman", Font.BOLD, 24);
-        TrueTypeFont font = new TrueTypeFont(awtFont, true);
-        font.drawString(x, y, text);
+
+        GL11.glTranslatef(x, y, 0);
+        Color.YELLOW.bind();
+        t.bind();
+//        fillRectangle(x, y, x + 100, y + 100);
+        GL11.glBegin(GL11.GL_QUADS);
+        {
+            GL11.glTexCoord2f(0, 0);
+            GL11.glVertex2f(0, 0);
+
+            GL11.glTexCoord2f(0, t.getHeight());
+            GL11.glVertex2f(0, t.getImageHeight());
+
+            GL11.glTexCoord2f(t.getWidth(), t.getHeight());
+            GL11.glVertex2f(t.getImageWidth(), t.getImageHeight());
+
+            GL11.glTexCoord2f(t.getWidth(), 0);
+            GL11.glVertex2f(t.getImageWidth(), 0);
+        }
+        GL11.glEnd();
+//
         GL11.glPopMatrix();
         GL11.glDisable(GL11.GL_TEXTURE_2D);
     }
@@ -81,7 +130,7 @@ public class Graphics {
         float fi = 0;
 
         int steps = (radius1 + radius2) / 4;
-        float delta = (float) ((Math.PI / 2) / steps);
+        float delta = (float) ((Math.PI * 2) / steps);
 
         GL11.glBegin(GL11.GL_LINE_STRIP);
         GL11.glVertex2f(x + radius1, y + 0f);

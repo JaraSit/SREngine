@@ -33,7 +33,7 @@ public class World01 extends BaseState {
 
     public World01(int id) {
         super(id);
-        setBackground(Color.GRAY);
+        setBackground(Color.DARK_GRAY);
     }
 
 
@@ -156,7 +156,7 @@ public class World01 extends BaseState {
 //        g.drawLine(0, 0, 600, 600);
 
         //TODO slow!! :/
-//        g.drawString("It's race!", 10, 10);
+        g.drawString("It's race!", 10, 10);
 //        rect3.draw(g, gc);
     }
 }

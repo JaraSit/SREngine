@@ -29,7 +29,7 @@ public class PhysicalSREObject extends SREObject {
     }
 
     @Override
-    public void update(GameCore gc, int delta) {
+    public void update(GameCore gc, InputManager input, int delta) {
         this.velocityX += accelerationX;
         this.velocityY += accelerationY;
         this.velocityFi += accelerationFi;

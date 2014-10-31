@@ -46,7 +46,7 @@ public abstract class BaseState {
      */
     protected void update(GameCore gc, InputManager input, int delta) {
         for (int i = 0; i < objects.size(); i++) {
-            objects.get(i).update(gc, delta);
+            objects.get(i).update(gc, input, delta);
         }
 
         if (camera != null) {
@@ -116,6 +116,23 @@ public abstract class BaseState {
     protected void cameraOn(Entity camEntity, int width, int height) {
         camera = new Camera(camEntity, width, height);
     }
+    
+    /**
+     * 
+     * @param moveX
+     * @param moveY 
+     */
+    protected void cameraMove(float moveX, float moveY) {
+        this.camera.move(moveX, moveY);
+    }
+    
+    /**
+     * 
+     * @return 
+     */
+    protected Camera getCamera() {
+        return this.camera;
+    }
 
     /**
      * State object getter
@@ -153,6 +170,10 @@ public abstract class BaseState {
      */
     protected void setBackground(Color color) {
         this.bgColor = color;
+    }
+    
+    protected int objectArraySize() {
+        return this.objects.size();
     }
 
 }

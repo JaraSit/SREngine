@@ -11,6 +11,8 @@ public class Color {
     public final static Color BLUE = new Color(0, 0, 255, 255);
     public final static Color GREEN = new Color(0, 255, 0, 255);
     public final static Color GRAY = new Color(125, 125, 125, 255);
+    public final static Color ORANGE = new Color(255, 125, 0, 255);
+    public static final Color DARK_GRAY = new Color(85, 85, 85, 255);
 
     float r;
     float g;
@@ -21,6 +23,7 @@ public class Color {
         this.r = r / 255f;
         this.g = g / 255f;
         this.b = b / 255f;
+        this.a = a / 255f;
     }
 
     public float getRed() {
@@ -33,6 +36,10 @@ public class Color {
 
     public float getBlue() {
         return b;
+    }
+    
+    public float getAlpha() {
+        return a;
     }
 
     public void bind() {
