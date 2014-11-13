@@ -13,6 +13,8 @@ public class Entity extends SREObject {
     private IHitBox clickBox;
     private boolean isDestroyed = false;
     private boolean hitBoxIsVisible = true;
+    private int hitBoxAlign = IHitBox.ALIGN_CENTER;
+    private int hitBoxValign = IHitBox.VALIGN_CENTER;
 
     public Entity(float x, float y, String path) {
         super(x, y);
@@ -43,8 +45,8 @@ public class Entity extends SREObject {
         if (anim != null && !hidden) {
             anim.draw((int) x, (int) y, centered);
         }
-        if (hitBox != null) {
-            g.setColor(Color.RED);
+        if (hitBox != null && hitBoxIsVisible) {
+            g.setColor(Color.YELLOW);
             hitBox.draw(gc, g);
         }
     }
@@ -58,6 +60,22 @@ public class Entity extends SREObject {
 //        } else if (image != null) {
 //            this.image.setAngleDeg(this.getAngleDeg());
 //        }
+
+        if (hitBoxAlign == IHitBox.ALIGN_CENTER) {
+
+        } else if (hitBoxAlign == IHitBox.ALIGN_LEFT) {
+
+        } else if (hitBoxAlign == IHitBox.ALIGN_RIGHT) {
+
+        }
+
+        if (hitBoxValign == IHitBox.VALIGN_CENTER) {
+
+        } else if (hitBoxValign == IHitBox.VALIGN_TOP) {
+
+        } else if (hitBoxValign == IHitBox.VALIGN_BOTTOM) {
+
+        }
 
         if (hitBox != null) {
             if (centered) {
@@ -175,5 +193,13 @@ public class Entity extends SREObject {
 
     public void setHitBoxVisible(boolean visible) {
         this.hitBoxIsVisible = visible;
+    }
+
+    public void setHitBoxAlign(int align) {
+        this.hitBoxAlign = align;
+    }
+
+    public void setHitBoxVAlign(int valign) {
+        this.hitBoxValign = valign;
     }
 }

@@ -15,7 +15,7 @@ import srengine.utils.Serialiser;
 public class World01 extends BaseState {
 
     Image image;
-    Serialiser s = new Serialiser("../pack.dat");
+    Serialiser s = new Serialiser("pack.dat");
     Entity sprite;
     Entity sprite2;
     Entity entity;
@@ -41,7 +41,7 @@ public class World01 extends BaseState {
     protected void enter() {
         super.enter();
         
-        image = Image.load("../Graphics/people/r2d2_01_a.png");
+        image = Image.load("Graphics/people/r2d2_01_a.png");
 
         sprite = new Entity(10, 350, new String[]{"Sit_01_a.png", "Sit_01_b.png"}, s);
 
@@ -156,7 +156,9 @@ public class World01 extends BaseState {
 //        g.drawLine(0, 0, 600, 600);
 
         //TODO slow!! :/
-        g.drawString("It's race!", 10, 10);
+        g.setColor(Color.RED);
+        g.drawString("It's j race!", 100, 100);
+        g.drawChars(new char[]{'a','b',' ','c'}, 3, 1, 100, 200);
 //        rect3.draw(g, gc);
     }
 }

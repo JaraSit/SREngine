@@ -177,8 +177,14 @@ public class InputManager {
 //	}
     public void update() {
         while (Keyboard.next()) {
-            keys[Keyboard.getEventKey()] = Keyboard.getEventKeyState();
-            typed += Keyboard.getEventCharacter();
+            int key = Keyboard.getEventKey();
+            keys[key] = Keyboard.getEventKeyState();
+            if (listenKeys && key > 0) {
+                char ch = Keyboard.getEventCharacter();
+                if (ch > 0) {
+                    typed += ch;
+                }
+            }
         }
         while (Mouse.next()) {
             if (Mouse.getEventButton() > -1) {
@@ -210,7 +216,7 @@ public class InputManager {
     }
 
     public Point getMousePos() {
-        return new Point(posX, posY);
+        return new Point(posX, Display.getHeight() - posY);
     }
 
     public int getMouseY() {
@@ -254,9 +260,9 @@ public class InputManager {
     public boolean isMMBDown() {
         return mouseButtons[2];
     }
-    
+
     public boolean isMouseClicked(int i) {
-        if(i > -1 && i < 3) {
+        if (i > -1 && i < 3) {
             boolean temp = mouseButtons[i];
             mouseButtons[i] = false;
             return temp;
